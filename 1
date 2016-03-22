@@ -1,0 +1,34 @@
+require 'serverspec'
+
+# Required by serverspec
+set :backend, :exec
+
+describe "Git Daemon" do
+
+  it "is listening on port 9418" do
+    expect(port(22)).to be_listening
+  end
+
+  it "has a running service of git-daemon" do
+    expect(service("sshd")).to be_running
+  end
+
+describe port(22) do
+  it { should be_listening }
+end
+describe command('apache2ctl -M') do
+  its(:stdout) { should contain('filter_module') }
+end
+describe cron do
+  it { should have_entry '* * * * * /usr/local/bin/foo' }
+end
+describe default_gateway do
+  its(:ipaddress) { should eq '172.17.42.1' }
+end
+describe file('/') do
+  it { should be_mounted.with( :options => { :rw => true } ) }
+end
+describe process("apache2") do
+  its(:user) { should eq "apache2" }
+end
+end
